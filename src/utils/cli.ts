@@ -1,15 +1,14 @@
 import { Interface } from 'readline';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import ReadFileCommand from '../commands/ReadFile';
+import CommandRobot from '../commands/command';
+import ReadFileCommand from '../commands/readFile';
 import { InvalidCommandException } from '../errors';
-import { CliArgs } from '../types';
-import { ConsoleLogger } from './logger';
 
 class Cli extends Interface {
   constructor(
-    private readonly logger: ConsoleLogger,
-    private readonly readfileCommand: ReadFileCommand
+    private readonly readfileCommand: ReadFileCommand,
+    private readonly moveRobotCommand: CommandRobot
   ) {
     super({
       input: process.stdin,
@@ -41,7 +40,7 @@ class Cli extends Interface {
   };
 
   public run = (): void => {
-    this.on('line', this.logger.info);
+    this.on('line', this.moveRobotCommand.execute);
   };
 }
 

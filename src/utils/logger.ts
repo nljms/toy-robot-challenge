@@ -8,4 +8,8 @@ export class ConsoleLogger implements Logger {
   info = (message: any) => {
     console.log('[INFO]', message);
   };
+
+  output = (message: any) => {
+    console.log('[OUTPUT]', message);
+  };
 }

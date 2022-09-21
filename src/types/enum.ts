@@ -1,11 +1,14 @@
 export enum Direction {
-  N = 'North',
-  S = 'South',
-  E = 'East',
-  W = 'West',
+  NORTH,
+  EAST,
+  SOUTH,
+  WEST,
 }
 
-export enum Position {
-  Left,
-  Right,
+export enum Command {
+  Place = 'PLACE',
+  Move = 'MOVE',
+  Left = 'LEFT',
+  Right = 'RIGHT',
+  Report = 'REPORT',
 }

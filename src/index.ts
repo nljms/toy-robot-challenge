@@ -1,6 +1,9 @@
 #!/usr/bin/env node
-import ReadFileCommand from './commands/ReadFile';
-import { ConsoleLogger } from './utils';
+import CommandRobot from './commands/command';
+import ParseInstructionCommand from './commands/parseInstruction';
+import ReadFileCommand from './commands/readFile';
 import Cli from './utils/cli';
 
-new Cli(new ConsoleLogger(), new ReadFileCommand()).chooseInput();
+const commandRobot = new CommandRobot(new ParseInstructionCommand());
+
+new Cli(new ReadFileCommand(commandRobot), commandRobot).chooseInput();
