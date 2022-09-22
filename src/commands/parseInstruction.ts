@@ -7,10 +7,12 @@ class ParseInstructionCommand {
 
   private clean = (command: string): Command => command.trim() as Command;
 
-  private splitValues =
-    (delimiter: string) =>
-    (command: string): string[] =>
-      command.split(delimiter);
+  private cleanCommand = (command: string) => {
+    return this.clean(command.toUpperCase().replace(/\s+/g, ' ')) as Command;
+  };
+
+  private splitValues = (delimiter: string, command: string): string[] =>
+    command.split(delimiter);
 
   /**
    * Checks wether the provided command is
@@ -32,17 +34,20 @@ class ParseInstructionCommand {
       return null;
     }
 
-    const splitCommand = this.splitValues(' ');
-    const splitInitialPosition = this.splitValues(',');
-    const [command, initialPosition] = splitCommand(this.clean(rawCommand));
+    const splitCommand = this.splitValues(' ', rawCommand);
+    const [uncleanCommandValue, initialPosition] = splitCommand;
+
+    const command = this.cleanCommand(uncleanCommandValue);
 
     if (!initialPosition) {
       return {
-        command: command as Command,
+        command,
       };
     }
 
-    const [x, y, direction] = splitInitialPosition(this.clean(initialPosition));
+    const splitInitialPosition = this.splitValues(',', initialPosition);
+
+    const [x, y, direction] = splitInitialPosition;
 
     if ([x, y].some((arg) => isNaN(Number(arg)))) {
       return null;
@@ -53,7 +58,7 @@ class ParseInstructionCommand {
       : Direction[direction.toUpperCase() as any];
 
     return {
-      command: command as Command,
+      command,
       position: {
         x: Number(x),
         y: Number(y),

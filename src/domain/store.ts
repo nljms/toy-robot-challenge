@@ -1,5 +1,3 @@
-import ParseInstructionCommand from '../commands/parseInstruction';
-import { InvalidCommandException } from '../errors';
 import { Direction, ParsedCommand } from '../types';
 import { ConsoleLogger } from '../utils';
 
@@ -21,7 +19,7 @@ class RobotMovementStore {
     RobotMovementStore.movementLog.push(parsedCommand);
   };
 
-  public report = () => {
+  public static fetchLatestLog = () => {
     const DIRECTIONS = Object.values(Direction);
     const lastIndex = RobotMovementStore.movementLog.length - 1;
     const { [lastIndex]: result } = RobotMovementStore.movementLog.map(
@@ -34,6 +32,11 @@ class RobotMovementStore {
         },
       })
     );
+    return result;
+  };
+
+  public report = () => {
+    const result = RobotMovementStore.fetchLatestLog();
     this.logger.output(result.position);
   };
 }

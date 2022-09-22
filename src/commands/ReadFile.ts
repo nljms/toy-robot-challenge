@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { RobotMovementStore } from '../domain';
 import CommandRobot from './command';
 
 class ReadFileCommand {
@@ -24,7 +25,14 @@ class ReadFileCommand {
 
     const rawCommands = this.parseFile(Buffer.from(file).toString('utf-8'));
 
-    this.processCommands(rawCommands);
+    const filteredCommands = rawCommands
+      .map((command) => command.trim())
+      .filter(Boolean);
+
+    console.log(filteredCommands);
+    this.processCommands(filteredCommands);
+
+    return RobotMovementStore.fetchLatestLog();
   };
 }
 

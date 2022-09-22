@@ -43,6 +43,11 @@ class CommandRobot {
       throw new InvalidCommandException();
     }
     this.handleCommand(parsedCommmand);
+
+    if (!(rawCommand === Command.Report)) {
+      return;
+    }
+    return RobotMovementStore.fetchLatestLog();
   };
 }
 
