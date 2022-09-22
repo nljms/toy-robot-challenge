@@ -1,7 +1,7 @@
 import { InvalidMovementException } from '../errors';
 import { Direction, ParsedCommand } from '../types';
 import { ConsoleLogger } from '../utils';
-import Table from './table';
+import Table from '../domain/table';
 
 class RobotMovementStore {
   constructor(
@@ -17,11 +17,12 @@ class RobotMovementStore {
    * @returns void
    */
   public save = (parsedCommand: ParsedCommand | null) => {
-    if (!parsedCommand || !parsedCommand.position) {
+    this.logger.info('Saving parsed command', parsedCommand);
+    if (!parsedCommand || !parsedCommand.coordinates) {
       return;
     }
 
-    if (this.table.isOutOfBounds(parsedCommand.position)) {
+    if (this.table.isOutOfBounds(parsedCommand.coordinates)) {
       throw new InvalidMovementException();
     }
 
@@ -34,19 +35,14 @@ class RobotMovementStore {
     const { [lastIndex]: result } = RobotMovementStore.movementLog.map(
       (log) => ({
         ...log,
-        position: {
-          x: log.position?.x,
-          y: log.position?.y,
-          direction: DIRECTIONS[log.position?.direction as number],
+        coordinates: {
+          x: log.coordinates?.x,
+          y: log.coordinates?.y,
         },
+        direction: DIRECTIONS[log.direction as number],
       })
     );
     return result;
-  };
-
-  public report = () => {
-    const result = RobotMovementStore.fetchLatestLog();
-    this.logger.output(result.position);
   };
 }
 
