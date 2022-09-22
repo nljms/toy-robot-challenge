@@ -1,39 +1,29 @@
-import RobotMovementStore from '../../domain/store';
+import InputParser from '../../utils/parser';
 import ParseInstructionCommand from '../parseInstruction';
+
+let parseMethodMock = jest.fn();
 
 let parseCommand: ParseInstructionCommand;
 
 describe('ParseInstructionCommand', () => {
-  beforeEach(() => {
-    parseCommand = new ParseInstructionCommand();
+  beforeAll(() => {
+    jest
+      .spyOn(InputParser.prototype, 'parse')
+      .mockImplementation(parseMethodMock);
+    jest
+      .spyOn(ParseInstructionCommand.prototype, 'execute')
+      .mockImplementation(jest.fn());
   });
 
-  afterEach(() => {
-    RobotMovementStore.movementLog = [];
+  beforeEach(() => {
+    parseCommand = new ParseInstructionCommand(new InputParser());
   });
 
   describe('execute', () => {
-    it('should parse the initial command', () => {
-      const parsedCommand = parseCommand.execute('PLACE 1,2,NORTH');
-      const expectedResult = {
-        command: 'PLACE',
-        position: {
-          x: 1,
-          y: 2,
-          direction: 0,
-        },
-      };
-      expect(parsedCommand).toStrictEqual(expectedResult);
-    });
-
-    it('should parse succeeding commands', () => {
-      RobotMovementStore.movementLog = [{} as any];
-
-      const parsedCommand = parseCommand.execute('MOVE');
-      const expectedResult = {
-        command: 'MOVE',
-      };
-      expect(parsedCommand).toStrictEqual(expectedResult);
+    it('Should call parse method', () => {
+      parseCommand.execute('PLACE 1,1,NORTH');
+      parseCommand.execute('MOVE');
+      expect(parseMethodMock).toHaveBeenCalledTimes(2);
     });
   });
 });
