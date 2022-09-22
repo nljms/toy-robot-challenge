@@ -7,9 +7,10 @@ export interface Robot {
   report: () => void;
 }
 
-export interface Position {
-  x: number;
-  y: number;
+interface RobotInfo {
+  coordinates: Coordinates;
+  command: Command;
+  direction: Direction;
 }
 
 export interface TableConfig {
@@ -18,7 +19,7 @@ export interface TableConfig {
 }
 
 export interface Table {
-  isOutOfBounds: (position: Position) => boolean;
+  isOutOfBounds: (position: Coordinates) => boolean;
 }
 
 export interface CommandLine {
@@ -27,18 +28,37 @@ export interface CommandLine {
 }
 
 export interface Logger {
-  info: (message: any) => void;
-  error: (message: any) => void;
+  info: (...message: any) => void;
+  error: (...message: any) => void;
+  output: (...message: any) => void;
 }
 
-export interface InitialPosition extends Position {
+export interface InitialPosition extends Coordinates {
   direction: Direction;
 }
 
 export type ValueOf<T> = T[keyof T];
 
-export interface ParsedPosition extends Position {
+export interface ParsedPosition extends Coordinates {
   direction: ValueOf<Direction>;
+}
+
+export interface Parser {
+  parse: (rawCommand: string) => ParsedCommand;
+  isInvalidCommand: (rawCommand: string) => boolean;
+  getCommand: (rawCommand: string) => Command;
+  getCoordinates: (rawCommand: string) => Coordinates;
+  getDirection: (rawCommand: string) => Direction;
+}
+
+export interface User {
+  id: number;
+  robot: Robot;
+}
+
+export interface Coordinates {
+  x: number;
+  y: number;
 }
 
 export interface ParsedCommandResult {
@@ -48,5 +68,15 @@ export interface ParsedCommandResult {
 
 export interface ParsedCommand {
   command: Command;
-  position?: InitialPosition;
+  coordinates?: Coordinates;
+  direction?: Direction;
+  user?: Partial<User>;
 }
+
+interface Store<Type> {
+  save: (info: Partial<Type>) => void;
+}
+
+export interface RobotStore extends Store<RobotInfo> {}
+
+export interface UserStore extends Store<User> {}
