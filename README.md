@@ -7,11 +7,11 @@ This is a typescript implementation of the toy robot challenge. This project use
 I've used different architectural patterns in this project.
 
 - Singleton
-  I setup a store which serves as the singe source of truth for this project. Most of the services uses the single instance of `RobotMovementStore`
+  - I setup a store which serves as the singe source of truth for this project. Most of the services uses the single instance of `RobotMovementStore`
 - Event Sourcing
-  I used a store in this project to persist and rebuild the history of valid command inputs that are handled in this system
+  - I used a store in this project to persist and rebuild the history of valid command inputs that are handled in this system
 - Dependency Injection
-  Although it's not the usual kind of implementation, I am always a fan of dependency injection. In this approach I am free to abstract things and spread it out into different domains.
+  - Although it's not the usual kind of implementation, I am always a fan of dependency injection. In this approach I am free to abstract things and spread it out into different domains.
 
 ## Folder structure
 
