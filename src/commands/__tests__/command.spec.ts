@@ -1,13 +1,16 @@
-import RobotMovementStore from '../../domain/store';
+import InputParser from '../../utils/parser';
+import RobotMovementStore from '../../utils/store';
 import CommandRobot from '../command';
 import ParseInstructionCommand from '../parseInstruction';
 
 describe('CommandRobot', () => {
   let commandRobot: CommandRobot;
   let parseCommand: ParseInstructionCommand;
+  let parser: InputParser;
 
   beforeEach(() => {
-    parseCommand = new ParseInstructionCommand();
+    parser = new InputParser();
+    parseCommand = new ParseInstructionCommand(parser);
     commandRobot = new CommandRobot(parseCommand);
     RobotMovementStore.movementLog = [];
   });
@@ -17,39 +20,27 @@ describe('CommandRobot', () => {
   });
 
   it('Should handle input a:', () => {
-    const expectedResult = {
-      x: 0,
-      y: 1,
-      direction: 'NORTH',
-    };
+    const expectedResult = '0,1,NORTH';
 
     commandRobot.execute('PLACE 0,0,NORTH');
     commandRobot.execute('MOVE');
     const result = commandRobot.execute('REPORT');
 
-    expect(result?.position).toStrictEqual(expectedResult);
+    expect(result).toBe(expectedResult);
   });
 
   it('Should handle input b:', () => {
-    const expectedResult = {
-      x: 0,
-      y: 0,
-      direction: 'WEST',
-    };
+    const expectedResult = '0,0,WEST';
 
     commandRobot.execute('PLACE 0,0,NORTH');
     commandRobot.execute('LEFT');
     const result = commandRobot.execute('REPORT');
 
-    expect(result?.position).toStrictEqual(expectedResult);
+    expect(result).toBe(expectedResult);
   });
 
   it('Should handle input c:', () => {
-    const expectedResult = {
-      x: 3,
-      y: 3,
-      direction: 'NORTH',
-    };
+    const expectedResult = '3,3,NORTH';
     commandRobot.execute('PLACE 1,2,EAST');
     commandRobot.execute('MOVE');
     commandRobot.execute('MOVE');
@@ -57,8 +48,7 @@ describe('CommandRobot', () => {
     commandRobot.execute('MOVE');
     const result = commandRobot.execute('REPORT');
 
-    expect(result?.command).toBe('MOVE');
-    expect(result?.position).toStrictEqual(expectedResult);
+    expect(result).toBe(expectedResult);
   });
 
   it('Should throw out of bounds for handling initial command', () => {

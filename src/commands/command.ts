@@ -1,57 +1,63 @@
 import ParseInstructionCommand from './parseInstruction';
-import { Command, ParsedCommand } from '../types';
+import { Command, ParsedCommand, Robot } from '../types';
 import { ConsoleLogger } from '../utils';
 import ToyRobot from '../domain/robot';
-import RobotMovementStore from '../domain/store';
-import { InvalidCommandException } from '../errors';
+import RobotMovementStore from '../utils/store';
 import { TableSurface } from '../domain';
 
 class CommandRobot {
-  private robot: ToyRobot | undefined;
+  private robot: Robot | undefined;
 
   constructor(private readonly parseCommand: ParseInstructionCommand) {}
 
-  public handleCommand(parsedCommand: ParsedCommand): void {
-    if (this.robot) {
-      switch (parsedCommand.command) {
-        case Command.Left:
-          this.robot.turnLeft();
-          break;
-        case Command.Right:
-          this.robot.turnRight();
-          break;
-        case Command.Move:
-          this.robot.move();
-          break;
-        case Command.Report:
-          this.robot.report();
-          break;
-        default:
-      }
+  public handleCommand(parsedCommand: ParsedCommand): Robot | string | void {
+    if (!this.robot) {
+      return this.initializeRobot(parsedCommand);
     }
 
-    if (parsedCommand.command === Command.Place && parsedCommand.position) {
-      this.robot = new ToyRobot(
-        new RobotMovementStore(
-          new ConsoleLogger(),
-          new TableSurface({ width: 5, height: 5 })
-        ),
-        parsedCommand.position
-      );
+    switch (parsedCommand.command) {
+      case Command.Left:
+        return this.robot.turnLeft();
+      case Command.Right:
+        return this.robot.turnRight();
+      case Command.Move:
+        return this.robot.move();
+      case Command.Report:
+        return this.robot.report();
+      default:
+        return this.robot;
     }
   }
 
+  private initializeRobot = (parsedCommand: ParsedCommand): Robot | void => {
+    const { command, coordinates, direction } = parsedCommand;
+    if (command === Command.Place && coordinates && direction !== undefined) {
+      const initialPosition = {
+        x: coordinates.x,
+        y: coordinates.y,
+        direction,
+      };
+
+      const logger = new ConsoleLogger();
+      this.robot = new ToyRobot(
+        new RobotMovementStore(
+          logger,
+          new TableSurface({ width: 5, height: 5 })
+        ),
+        initialPosition,
+        logger
+      );
+    }
+  };
+
   public execute = (rawCommand: string) => {
     const parsedCommmand = this.parseCommand.execute(rawCommand);
-    if (!parsedCommmand) {
-      throw new InvalidCommandException();
-    }
+
     this.handleCommand(parsedCommmand);
 
-    if (!(rawCommand === Command.Report)) {
-      return;
-    }
-    return RobotMovementStore.fetchLatestLog();
+    this.robot?.report();
+
+    return this.robot?.report();
   };
 }
 
