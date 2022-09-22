@@ -1,6 +1,6 @@
 {
   "name": "@nljms/toy-robot-challenge",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "engines": {
@@ -18,7 +18,7 @@
     "nodejs"
   ],
   "bin": {
-    "robot": "./lib/index.js"
+    "robot": "./dist/index.js"
   },
   "author": "Neil Monzales",
   "license": "ISC",
