@@ -1,6 +1,6 @@
-import { Position, TableConfig } from '../types';
+import { Position, Table, TableConfig } from '../types';
 
-class Table {
+class TableSurface implements Table {
   constructor(private readonly config: TableConfig) {}
 
   public isOutOfBounds = (currentPosition: Position): boolean => {
@@ -12,4 +12,4 @@ class Table {
   };
 }
 
-export default Table;
+export default TableSurface;

@@ -1,7 +1,7 @@
-import { Command, Direction, InitialPosition } from '../types';
+import { Command, Direction, InitialPosition, Robot } from '../types';
 import RobotMovementStore from './store';
 
-class ToyRobot {
+class ToyRobot implements Robot {
   public currentPosition: InitialPosition;
 
   constructor(

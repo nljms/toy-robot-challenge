@@ -1,8 +1,13 @@
+import { InvalidMovementException } from '../errors';
 import { Direction, ParsedCommand } from '../types';
 import { ConsoleLogger } from '../utils';
+import Table from './table';
 
 class RobotMovementStore {
-  constructor(private readonly logger: ConsoleLogger) {}
+  constructor(
+    private readonly logger: ConsoleLogger,
+    private readonly table: Table
+  ) {}
 
   public static movementLog: ParsedCommand[] = [];
 
@@ -12,8 +17,12 @@ class RobotMovementStore {
    * @returns void
    */
   public save = (parsedCommand: ParsedCommand | null) => {
-    if (!parsedCommand) {
+    if (!parsedCommand || !parsedCommand.position) {
       return;
+    }
+
+    if (this.table.isOutOfBounds(parsedCommand.position)) {
+      throw new InvalidMovementException();
     }
 
     RobotMovementStore.movementLog.push(parsedCommand);

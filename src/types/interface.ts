@@ -4,7 +4,7 @@ export interface Robot {
   move: () => void;
   turnLeft: () => void;
   turnRight: () => void;
-  report: () => string;
+  report: () => void;
 }
 
 export interface Position {
@@ -17,13 +17,14 @@ export interface TableConfig {
   width: number;
 }
 
-export interface Table {}
+export interface Table {
+  isOutOfBounds: (position: Position) => boolean;
+}
 
-export interface Cli {}
-
-export interface Move {}
-
-export interface Report {}
+export interface CommandLine {
+  chooseInput: () => void;
+  run: () => void;
+}
 
 export interface Logger {
   info: (message: any) => void;

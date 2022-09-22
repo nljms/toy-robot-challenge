@@ -4,8 +4,9 @@ import { hideBin } from 'yargs/helpers';
 import CommandRobot from '../commands/command';
 import ReadFileCommand from '../commands/readFile';
 import { InvalidCommandException } from '../errors';
+import { CommandLine } from '../types';
 
-class Cli extends Interface {
+class Cli extends Interface implements CommandLine {
   constructor(
     private readonly readfileCommand: ReadFileCommand,
     private readonly moveRobotCommand: CommandRobot

@@ -4,6 +4,7 @@ import { ConsoleLogger } from '../utils';
 import ToyRobot from '../domain/robot';
 import RobotMovementStore from '../domain/store';
 import { InvalidCommandException } from '../errors';
+import { TableSurface } from '../domain';
 
 class CommandRobot {
   private robot: ToyRobot | undefined;
@@ -31,7 +32,10 @@ class CommandRobot {
 
     if (parsedCommand.command === Command.Place && parsedCommand.position) {
       this.robot = new ToyRobot(
-        new RobotMovementStore(new ConsoleLogger()),
+        new RobotMovementStore(
+          new ConsoleLogger(),
+          new TableSurface({ width: 5, height: 5 })
+        ),
         parsedCommand.position
       );
     }
