@@ -26,7 +26,7 @@ I've used different architectural patterns in this project. I also followed some
   - Though I put in some extra handling, keeping the code in line with the requirement and not over engineering things would keep us away from doing extra hours of work.
 - Event Storming
   - In order to determine each domains, I conducted event storming by myself. Although it is much recommeded to use it along with people who are knowledgeable with the product and development team, it made things quite easier.
-    ![event-storming]('https://github.com/nljms/toy-robot-challenge/blob/main/assets/toy-robot-challenge-event-storming.png')
+    ![event-storming](https://github.com/nljms/toy-robot-challenge/blob/main/assets/toy-robot-challenge-event-storming.png)
 
 ## Folder structure
 
